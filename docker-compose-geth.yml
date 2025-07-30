@@ -1,0 +1,35 @@
+services:
+  geth:
+    image: ethereum/client-go:latest
+    volumes:
+      - ./genesis.json:/genesis.json
+      - ./jwt.hex:/jwt.hex
+      - ./geth-data:/root/.ethereum
+    entrypoint: geth
+    command: --http --http.addr 0.0.0.0 --http.port 8545 --http.api eth,net,web3,debug --datadir /root/.ethereum --authrpc.port 8551 --authrpc.addr 0.0.0.0 --authrpc.jwtsecret /jwt.hex
+    ports:
+      - "8545:8545"
+      - "8551:8551"
+    networks:
+      - eth-net
+
+  prysm:
+    image: gcr.io/prysmaticlabs/prysm/beacon-chain:latest
+    volumes:
+      - ./jwt.hex:/jwt.hex
+      - ./prysm-data:/data
+    command: --datadir=/data --execution-endpoint=http://geth:8551 --jwt-secret=/jwt.hex --grpc-gateway-host=0.0.0.0 --grpc-gateway-port=5052 --chain-id=6198076965 --accept-terms-of-use
+    ports:
+      - "5052:5052"
+    depends_on:
+      - geth
+    networks:
+      - eth-net
+
+volumes:
+  geth-data:
+  prysm-data:
+
+networks:
+  eth-net:
+    driver: bridge

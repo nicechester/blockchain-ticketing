@@ -1,0 +1,8 @@
+build
+target
+main/java/com/nicechester/blockchain/ticketing/TicketNFT.java
+node_modules
+.DS_Store
+.idea
+.java-version
+package-lock.json
