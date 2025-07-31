@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Use Ticket</title>
+</head>
+<body>
+    <h1>Use Ticket</h1>
+    <form method="post" action="/use">
+        <label>Token ID: <input type="text" name="tokenId" required/></label>
+        <button type="submit">Use Ticket</button>
+    </form>
+    <p th:text="${message}"></p>
+    <a href="/menu">Back to Menu</a>
+</body>
+</html>

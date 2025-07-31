@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>My Tickets</title>
+</head>
+<body>
+    <h1>My Tickets</h1>
+    <form method="get" action="/tickets">
+        <label>Account Address: <input type="text" name="owner" required/></label>
+        <button type="submit">View Tickets</button>
+    </form>
+    <div th:if="${tickets != null}">
+        <h2>Tickets</h2>
+        <ul>
+            <li th:each="ticket : ${tickets}">
+                Token ID: <span th:text="${ticket.tokenId}"></span>, Status: <span th:text="${ticket.status}"></span>, Visit Date: <span th:text="${ticket.visitDate}"></span>, Park: <span th:text="${ticket.park}"></span>
+            </li>
+        </ul>
+    </div>
+    <a href="/menu">Back to Menu</a>
+</body>
+</html>

@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Check Ticket Status</title>
+</head>
+<body>
+    <h1>Check Ticket Status</h1>
+    <form method="get" action="/status">
+        <label>Token ID: <input type="text" name="tokenId" required/></label>
+        <button type="submit">Check Status</button>
+    </form>
+    <div th:if="${status != null}">
+        <p>Status: <span th:text="${status}"></span></p>
+    </div>
+    <a href="/menu">Back to Menu</a>
+</body>
+</html>

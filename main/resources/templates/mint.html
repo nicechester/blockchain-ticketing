@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Mint Ticket</title>
+</head>
+<body>
+    <h1>Mint Ticket</h1>
+    <form method="post" action="/mint">
+        <label>To (address): <input type="text" name="to" required/></label><br/>
+        <label>Visit Date: <input type="date" name="visitDate" required/></label><br/>
+        <label>Park:
+            <select name="park" required>
+                <option value="Disneyland Park">Disneyland Park</option>
+                <option value="Disney's California Adventure">Disney's California Adventure</option>
+            </select>
+        </label><br/>
+        <button type="submit">Mint</button>
+    </form>
+    <p th:text="${message}"></p>
+    <a href="/menu">Back to Menu</a>
+</body>
+</html>

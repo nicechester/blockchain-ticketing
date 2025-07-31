@@ -31,6 +31,10 @@
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-thymeleaf</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-log4j2</artifactId>
         </dependency>
         <dependency>
@@ -69,6 +73,32 @@
             </resource>
         </resources>
         <plugins>
+<!--            <plugin>-->
+<!--                <groupId>org.web3j</groupId>-->
+<!--                <artifactId>web3j-maven-plugin</artifactId>-->
+<!--                <version>${web3j.version}</version>-->
+<!--                <configuration>-->
+<!--                    <soliditySourceFiles>-->
+<!--                        <directory>${project.basedir}</directory>-->
+<!--                        <includes>-->
+<!--                            <include>**/*.sol</include>-->
+<!--                        </includes>-->
+<!--                    </soliditySourceFiles>-->
+<!--                    <outputDirectory>-->
+<!--                        <abi>build</abi>-->
+<!--                        <bin>build</bin>-->
+<!--                        <java>main/java</java>-->
+<!--                    </outputDirectory>-->
+<!--                    <packageName>com.nicechester.blockchain.ticketing</packageName>-->
+<!--                </configuration>-->
+<!--                <executions>-->
+<!--                    <execution>-->
+<!--                        <goals>-->
+<!--                            <goal>generate-sources</goal>-->
+<!--                        </goals>-->
+<!--                    </execution>-->
+<!--                </executions>                -->
+<!--            </plugin>-->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>

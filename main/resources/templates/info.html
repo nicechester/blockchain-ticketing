@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Get Ticket Info</title>
+</head>
+<body>
+    <h1>Get Ticket Info</h1>
+    <form method="get" action="/info">
+        <label>Token ID: <input type="text" name="tokenId" required/></label>
+        <button type="submit">Get Info</button>
+    </form>
+    <div th:if="${info != null}">
+        <p>Visit Date: <span th:text="${info.visitDate}"></span></p>
+        <p>Park: <span th:text="${info.park}"></span></p>
+    </div>
+    <a href="/menu">Back to Menu</a>
+</body>
+</html>
