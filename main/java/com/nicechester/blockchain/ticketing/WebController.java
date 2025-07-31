@@ -121,6 +121,23 @@ public class WebController {
         return "info";
     }
 
+    @GetMapping("/transfer")
+    public String transferForm() {
+        return "transfer";
+    }
+
+    @PostMapping("/transfer")
+    public String transferSubmit(@RequestParam String from, @RequestParam String to, @RequestParam String tokenId, Model model) {
+        try {
+            ticketService.transferTicket(from, to, new java.math.BigInteger(tokenId));
+            model.addAttribute("message", "Ticket transferred!");
+        } catch (Exception e) {
+            model.addAttribute("message", "Error: " + e.getMessage());
+        }
+        return "transfer";
+    }
+
+
     // Mock class for demonstration
     public static class TicketInfoMock {
         public String visitDate;

@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Transfer Ticket</title>
+</head>
+<body>
+    <h1>Transfer Ticket</h1>
+    <form method="post" action="/transfer">
+        <label>From (address): <input type="text" name="from" required/></label><br/>
+        <label>To (address): <input type="text" name="to" required/></label><br/>
+        <label>Token ID: <input type="text" name="tokenId" required/></label><br/>
+        <button type="submit">Transfer</button>
+    </form>
+    <p th:text="${message}"></p>
+    <a href="/menu">Back to Menu</a>
+</body>
+</html>
