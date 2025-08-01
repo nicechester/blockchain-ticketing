@@ -103,7 +103,7 @@ public class TicketService {
     }
 
     public EthAccounts getEthAccounts() {
-        EthAccounts result = new EthAccounts();
+        EthAccounts result;
         try {
             result = this.web3j.ethAccounts().send();
         } catch (IOException e) {

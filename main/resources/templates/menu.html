@@ -2,17 +2,22 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Main Menu</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
-<body>
-    <h1>TicketNFT Main Menu</h1>
-    <ul>
-        <li><a href="/mint">Mint Ticket</a></li>
-        <li><a href="/tickets">View My Tickets</a></li>
-        <li><a href="/use">Use Ticket</a></li>
-        <li><a href="/cancel">Cancel Ticket</a></li>
-        <li><a href="/status">Check Ticket Status</a></li>
-        <li><a href="/info">Get Ticket Info</a></li>
-        <li><a href="/transfer">Transfer Ticket</a></li>
-    </ul>
+<body class="bg-light">
+    <div class="container py-5">
+        <h1 class="mb-4 text-primary">TicketNFT Main Menu</h1>
+        <ul class="list-group list-group-flush mb-4">
+            <li class="list-group-item"><a class="nav-link" href="/mint">Mint Ticket</a></li>
+            <li class="list-group-item"><a class="nav-link" href="/tickets">View My Tickets</a></li>
+            <li class="list-group-item"><a class="nav-link" href="/accounts">All Accounts</a></li>
+            <li class="list-group-item"><a class="nav-link" href="/use">Use Ticket</a></li>
+            <li class="list-group-item"><a class="nav-link" href="/cancel">Cancel Ticket</a></li>
+            <li class="list-group-item"><a class="nav-link" href="/status">Check Ticket Status</a></li>
+            <li class="list-group-item"><a class="nav-link" href="/info">Get Ticket Info</a></li>
+            <li class="list-group-item"><a class="nav-link" href="/transfer">Transfer Ticket</a></li>
+        </ul>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

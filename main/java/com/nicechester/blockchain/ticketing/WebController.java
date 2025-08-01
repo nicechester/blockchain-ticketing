@@ -11,6 +11,14 @@ import java.time.LocalDate;
 @RequiredArgsConstructor
 public class WebController {
     private final TicketService ticketService;
+    private final SmartContractUtils smartContractUtils;
+
+    @GetMapping("/accounts")
+    public String accounts(Model model) {
+        var keystore = smartContractUtils.getAccounts().getKeystore();
+        model.addAttribute("accounts", keystore.keySet());
+        return "accounts";
+    }
 
     @GetMapping({"/", "/menu"})
     public String menu() {
@@ -39,6 +47,7 @@ public class WebController {
         // TODO: Call service to get tickets for owner
         model.addAttribute("tickets", null); // Replace with actual ticket list
         if (owner != null && !owner.isBlank()) {
+            model.addAttribute("owner", owner);
             try {
                 var tickets = ticketService.getTicketsOf(owner);
                 model.addAttribute("tickets", tickets);

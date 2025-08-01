@@ -2,16 +2,27 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Check Ticket Status</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
-<body>
-    <h1>Check Ticket Status</h1>
-    <form method="get" action="/status">
-        <label>Token ID: <input type="text" name="tokenId" required/></label>
-        <button type="submit">Check Status</button>
-    </form>
-    <div th:if="${status != null}">
-        <p>Status: <span th:text="${status}"></span></p>
+<body class="bg-light">
+    <div class="container py-5">
+        <h1 class="mb-4 text-primary">Check Ticket Status</h1>
+        <form method="get" action="/status" class="mb-4 row g-3 align-items-center">
+            <div class="col-auto">
+                <label class="col-form-label">Token ID:</label>
+            </div>
+            <div class="col-auto">
+                <input type="text" class="form-control" name="tokenId" required/>
+            </div>
+            <div class="col-auto">
+                <button type="submit" class="btn btn-primary">Check Status</button>
+            </div>
+        </form>
+        <div th:if="${status != null}" class="alert alert-info">
+            <span th:text="${status}"></span>
+        </div>
+        <a class="btn btn-secondary mt-4" href="/menu">Back to Menu</a>
     </div>
-    <a href="/menu">Back to Menu</a>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

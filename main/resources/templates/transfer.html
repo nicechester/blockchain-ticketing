@@ -2,16 +2,31 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Transfer Ticket</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
-<body>
-    <h1>Transfer Ticket</h1>
-    <form method="post" action="/transfer">
-        <label>From (address): <input type="text" name="from" required/></label><br/>
-        <label>To (address): <input type="text" name="to" required/></label><br/>
-        <label>Token ID: <input type="text" name="tokenId" required/></label><br/>
-        <button type="submit">Transfer</button>
-    </form>
-    <p th:text="${message}"></p>
-    <a href="/menu">Back to Menu</a>
+<body class="bg-light">
+    <div class="container py-5">
+        <h1 class="mb-4 text-primary">Transfer Ticket</h1>
+        <form method="post" action="/transfer" class="mb-4">
+            <div class="mb-3">
+                <label class="form-label">From:</label>
+                <input type="text" class="form-control" name="from" required/>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">To:</label>
+                <input type="text" class="form-control" name="to" required/>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Token ID:</label>
+                <input type="text" class="form-control" name="tokenId" required/>
+            </div>
+            <button type="submit" class="btn btn-primary">Transfer</button>
+        </form>
+        <div th:if="${message}" class="alert alert-info">
+            <span th:text="${message}"></span>
+        </div>
+        <a class="btn btn-secondary mt-4" href="/menu">Back to Menu</a>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
