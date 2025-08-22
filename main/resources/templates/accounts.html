@@ -15,14 +15,16 @@
     <table class="table table-bordered table-hover">
         <thead class="table-light">
         <tr>
-            <th>Account Address</th>
+            <th>Account Name</th>
             <th>Tickets</th>
         </tr>
         </thead>
         <tbody>
         <tr th:each="account : ${accounts}">
-            <td th:text="${account}"></td>
-            <td><a class="btn btn-sm btn-primary" th:href="@{'/tickets'(owner=${account})}">Show Tickets</a></td>
+            <td>
+                <span th:text="${account.name}"></span>
+            </td>
+            <td><a class="btn btn-sm btn-primary" th:href="@{'/tickets'(owner=${account.address})}">Show Tickets</a></td>
         </tr>
         </tbody>
     </table>

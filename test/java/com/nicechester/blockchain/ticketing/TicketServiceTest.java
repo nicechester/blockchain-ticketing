@@ -13,6 +13,7 @@ import org.web3j.protocol.core.methods.request.EthFilter;
 import org.web3j.protocol.core.methods.response.EthGetCode;
 import org.web3j.protocol.core.methods.response.TransactionReceipt;
 import org.web3j.tuples.generated.Tuple2;
+import org.web3j.tuples.generated.Tuple3;
 import org.web3j.tx.RawTransactionManager;
 
 import java.math.BigInteger;
@@ -74,10 +75,11 @@ class TicketServiceTest {
         String to = "0xabc";
         LocalDate visitDate = LocalDate.now();
         String park = "MagicPark";
+        String sku = "SKU123";
         TransactionReceipt receipt = new TransactionReceipt();
 
         // Mock the contract mint call
-        when(contract.mint(anyString(), any(BigInteger.class), anyString()))
+        when(contract.mint(anyString(), any(BigInteger.class), anyString(), anyString()))
                 .thenReturn(new RemoteFunctionCall<>(null, () -> receipt));
 
         // Mock the static event extraction
@@ -90,7 +92,7 @@ class TicketServiceTest {
             ticketNFTMockedStatic.when(() -> TicketNFT.getTicketMintedEvents(receipt))
                     .thenReturn(List.of(eventResponse));
 
-            assertDoesNotThrow(() -> ticketService.mint(to, visitDate, park));
+            assertDoesNotThrow(() -> ticketService.mint(to, visitDate, park, sku));
         }
     }
 
@@ -117,10 +119,11 @@ class TicketServiceTest {
     @Test
     void testGetTicketInfo() throws Exception {
         BigInteger visidDate = BigInteger.valueOf(LocalDate.now().toEpochDay());
-        Tuple2<BigInteger, String> tuple = new Tuple2<>(visidDate, "Park");
+        String sku = "SKU123";
+        Tuple3<BigInteger, String, String> tuple = new Tuple3<>(visidDate, "Park", sku);
         when(contract.getTicketInfo(any())).thenReturn(new RemoteFunctionCall<>(null, () -> tuple));
         when(contract.getTicketStatus(any())).thenReturn(new RemoteFunctionCall<>(null, () -> BigInteger.valueOf(TicketService.TicketStatus.Valid.ordinal())));
-        var ticketInfo = new TicketService.TicketInfo(BigInteger.ONE, "Park", LocalDate.now(), TicketService.TicketStatus.Valid);
+        var ticketInfo = new TicketService.TicketInfo(BigInteger.ONE, "Park", LocalDate.now(), sku, TicketService.TicketStatus.Valid);
         assertEquals(ticketInfo, ticketService.getTicketInfo(BigInteger.ONE));
     }
 
@@ -128,10 +131,11 @@ class TicketServiceTest {
     void testGetTicketsOf() throws Exception {
         String account = "0xabc";
         BigInteger visidDate = BigInteger.valueOf(LocalDate.now().toEpochDay());
-        Tuple2<BigInteger, String> tuple = new Tuple2<>(visidDate, "Park");
+        String sku = "SKU123";
+        Tuple3<BigInteger, String, String> tuple = new Tuple3<>(visidDate, "Park", sku);
         when(contract.getTicketInfo(any())).thenReturn(new RemoteFunctionCall<>(null, () -> tuple));
         when(contract.getTicketStatus(any())).thenReturn(new RemoteFunctionCall<>(null, () -> BigInteger.valueOf(TicketService.TicketStatus.Valid.ordinal())));
-        var ticketInfo = new TicketService.TicketInfo(BigInteger.ONE, "Park", LocalDate.now(), TicketService.TicketStatus.Valid);
+        var ticketInfo = new TicketService.TicketInfo(BigInteger.ONE, "Park", LocalDate.now(), sku, TicketService.TicketStatus.Valid);
         when(contract.getTicketsOf(anyString()))
                 .thenReturn(new RemoteFunctionCall<>(null, () -> List.of(BigInteger.ONE)));
         List<TicketService.TicketInfo> result = ticketService.getTicketsOf(account);

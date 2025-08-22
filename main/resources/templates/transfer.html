@@ -10,20 +10,31 @@
         <form method="post" action="/transfer" class="mb-4">
             <div class="mb-3">
                 <label class="form-label">From:</label>
-                <input type="text" class="form-control" name="from" required/>
+                <span class="fw-bold" th:text="${fromAccount.name}"></span>
+                <span class="text-muted small ms-2" th:text="${fromAccount.address}"></span>
+                <input type="hidden" class="form-control" name="from" th:value="${fromAccount.address}" required/>
             </div>
             <div class="mb-3">
                 <label class="form-label">To:</label>
-                <input type="text" class="form-control" name="to" required/>
+                <select class="form-select" name="to" required>
+                    <option th:each="account : ${accounts}" th:if="${account.address != fromAccount.address}" th:value="${account.address}">
+                        <span th:text="${account.name}"></span>
+                        <span th:text="' (' + ${account.address} + ')'"/>
+                    </option>
+                </select>
             </div>
             <div class="mb-3">
                 <label class="form-label">Token ID:</label>
-                <input type="text" class="form-control" name="tokenId" required/>
+                <input type="text" class="form-control" name="tokenId" th:value="${tokenId}" readonly required/>
             </div>
             <button type="submit" class="btn btn-primary">Transfer</button>
         </form>
         <div th:if="${message}" class="alert alert-info">
             <span th:text="${message}"></span>
+        </div>
+        <div class="mt-4 d-flex gap-2">
+            <a class="btn btn-secondary" th:href="@{'/tickets'(owner=${fromAccount.address})}">Account <span th:text="${fromAccount.name}"></span></a>
+            <a class="btn btn-secondary" th:if="${to != null}" th:href="@{'/tickets'(owner=${to})}">Account <span th:text="${to}"></span></a>
         </div>
         <a class="btn btn-secondary mt-4" href="/menu">Back to Menu</a>
     </div>

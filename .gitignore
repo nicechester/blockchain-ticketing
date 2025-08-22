@@ -6,3 +6,4 @@ node_modules
 .idea
 .java-version
 package-lock.json
+contract-address.json

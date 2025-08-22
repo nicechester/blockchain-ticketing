@@ -20,7 +20,7 @@ public class TicketService {
     private final Web3j web3j;
     private final TicketNFT contract;
 
-    public record TicketInfo(BigInteger tokenId, String park, LocalDate visitDate, TicketStatus status) {}
+    public record TicketInfo(BigInteger tokenId, String park, LocalDate visitDate, String sku, TicketStatus status) {}
 
     public TicketService(SmartContractUtils smartContractUtils) throws Exception {
         this.smartContractUtils = smartContractUtils;
@@ -28,13 +28,13 @@ public class TicketService {
         this.contract = smartContractUtils.ticketNFT();
     }
 
-    public BigInteger mint(String to, LocalDate visitDate, String park) {
+    public BigInteger mint(String to, LocalDate visitDate, String park, String sku) {
         if (contract == null) {
             throw new IllegalStateException("Contract not available in test mode.");
         }
         BigInteger visitTimestamp = BigInteger.valueOf(visitDate.toEpochDay());
         try {
-            TransactionReceipt receipt = contract.mint(to, visitTimestamp, park).send();
+            TransactionReceipt receipt = contract.mint(to, visitTimestamp, park, sku).send();
             // Parse the TicketMinted event from the receipt
             List<TicketNFT.TicketMintedEventResponse> events = contract.getTicketMintedEvents(receipt);
             if (!events.isEmpty()) {
@@ -69,9 +69,10 @@ public class TicketService {
         try {
             var tuple = contract.getTicketInfo(tokenId).send();
             LocalDate visitDate = LocalDate.ofEpochDay(tuple.component1().longValue());
-            String park = tuple.component2().toString();
+            String park = tuple.component2();
+            String sku = tuple.component3();
             TicketStatus ticketStatus = getTicketStatus(tokenId);
-            return new TicketInfo(tokenId, park, visitDate, ticketStatus);
+            return new TicketInfo(tokenId, park, visitDate, sku, ticketStatus);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

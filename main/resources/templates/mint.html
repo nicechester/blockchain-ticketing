@@ -9,8 +9,17 @@
         <h1 class="mb-4 text-primary">Mint Ticket</h1>
         <form method="post" action="/mint" class="mb-4">
             <div class="mb-3">
-                <label class="form-label">To Address:</label>
-                <input type="text" class="form-control" name="to" required/>
+                <label class="form-label">To:</label>
+                <div th:if="${toAccount != null}">
+                    <span class="fw-bold" th:text="${toAccount.name}"></span>
+                    <span class="text-muted small ms-2" th:text="${toAccount.address}"></span>
+                    <input type="hidden" name="to" th:value="${toAccount.address}" />
+                </div>
+                <div th:if="${toAccount == null}">
+                    <select class="form-select" name="to" required>
+                        <option th:each="account : ${accounts}" th:value="${account.address}" th:text="${account.name}"></option>
+                    </select>
+                </div>
             </div>
             <div class="mb-3">
                 <label class="form-label">Visit Date:</label>
@@ -23,10 +32,31 @@
                     <option value="Disney's California Adventure">Disney's California Adventure</option>
                 </select>
             </div>
+            <div class="mb-3">
+                <label class="form-label">SKU:</label>
+                <input type="text" class="form-control" name="sku" required/>
+            </div>
             <button type="submit" class="btn btn-primary">Mint</button>
         </form>
         <div th:if="${message}" class="alert alert-info">
             <span th:text="${message}"></span>
+        </div>
+        <div th:if="${tickets != null}">
+            <h2>Tickets for this Account</h2>
+            <ul class="list-group" th:if="${tickets.size() > 0}">
+                <li class="list-group-item" th:each="ticket : ${tickets}">
+                    <div>
+                        <strong>Token ID:</strong> <span th:text="${ticket.tokenId}"></span>,
+                        <strong>Status:</strong> <span th:text="${ticket.status}"></span>,
+                        <strong>Visit Date:</strong> <span th:text="${ticket.visitDate}"></span>,
+                        <strong>Park:</strong> <span th:text="${ticket.park}"></span>,
+                        <strong>SKU:</strong> <span th:text="${ticket.sku}"></span>
+                    </div>
+                </li>
+            </ul>
+            <div th:if="${tickets.size() == 0}" class="alert alert-warning mt-3">
+                No tickets found for this account.
+            </div>
         </div>
         <a class="btn btn-secondary mt-4" href="/menu">Back to Menu</a>
     </div>

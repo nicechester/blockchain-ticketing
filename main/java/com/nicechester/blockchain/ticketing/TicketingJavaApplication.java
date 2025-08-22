@@ -5,7 +5,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 
 @SpringBootApplication
-@EnableConfigurationProperties({Accounts.class})
+@EnableConfigurationProperties({Wallet.class})
 public class TicketingJavaApplication {
     public static void main(String[] args) {
         SpringApplication.run(TicketingJavaApplication.class, args);

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Ticket Transferred</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+    <div class="container py-5">
+        <h1 class="mb-4 text-success">Ticket Transferred</h1>
+        <div class="card mb-4">
+            <div class="card-body">
+                <h5 class="card-title">Transfer Summary</h5>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">
+                        From: <a class="btn btn-secondary btn-sm ms-2" th:href="@{'/tickets'(owner=${from})}">
+                            <span th:text="${@accountService.getAccountByAddress(from)?.name}"></span>
+                        </a>
+                    </li>
+                    <li class="list-group-item">
+                        To: <a class="btn btn-secondary btn-sm ms-2" th:href="@{'/tickets'(owner=${to})}">
+                            <span th:text="${@accountService.getAccountByAddress(to)?.name}"></span>
+                        </a>
+                    </li>
+                    <li class="list-group-item">Token ID: <span th:text="${tokenId}"></span></li>
+                </ul>
+            </div>
+        </div>
+        <a class="btn btn-secondary" href="/menu">Back to Menu</a>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
