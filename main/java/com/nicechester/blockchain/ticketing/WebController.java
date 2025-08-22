@@ -184,6 +184,23 @@ public class WebController {
         }
     }
 
+    @GetMapping("/create-account")
+    public String createAccountForm() {
+        return "create-account";
+    }
+
+    @PostMapping("/create-account")
+    public String createAccountSubmit(@RequestParam String name, Model model) {
+        Account account = smartContractUtils.createAccount(name);
+        if (account != null) {
+            model.addAttribute("account", account);
+            model.addAttribute("message", "Account created successfully!");
+        } else {
+            model.addAttribute("message", "Failed to create account. See logs for details.");
+        }
+        return "create-account";
+    }
+
 
     // Mock class for demonstration
     public static class TicketInfoMock {

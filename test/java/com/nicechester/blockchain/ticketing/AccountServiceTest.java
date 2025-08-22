@@ -10,21 +10,17 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 class AccountServiceTest {
-    private Wallet wallet;
     private AccountService accountService;
 
     @BeforeEach
     void setUp() {
-        wallet = Mockito.mock(Wallet.class);
-        LinkedHashMap<String, String> keystore = new LinkedHashMap<>();
-        keystore.put("0xabc", "key1");
-        keystore.put("0xdef", "key2");
-        keystore.put("0x123", "key3");
-        Mockito.when(wallet.getKeystore()).thenReturn(keystore);
+        List<Account> accounts = List.of(
+                new Account("0xabc", "key1", "Alice Marie Smith"),
+                new Account("0xdef", "key2", "Bob Johnson"),
+                new Account("0x123", "key3", "Charlie Lee Williams")
+        );
         accountService = new AccountService();
-        // Inject the mock wallet
-        accountService.wallet = wallet;
-        accountService.init();
+        accountService.setAccounts(accounts);
     }
 
     @Test

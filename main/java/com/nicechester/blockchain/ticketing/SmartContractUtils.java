@@ -8,6 +8,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.web3j.crypto.Credentials;
+import org.web3j.crypto.ECKeyPair;
+import org.web3j.crypto.Keys;
+import org.web3j.crypto.Wallet;
+import org.web3j.crypto.WalletFile;
+import org.web3j.crypto.WalletUtils;
 import org.web3j.protocol.Web3j;
 import org.web3j.protocol.core.DefaultBlockParameterName;
 import org.web3j.protocol.core.methods.response.EthGetCode;
@@ -26,7 +31,7 @@ import java.io.IOException;
 @Getter
 public class SmartContractUtils {
     @Value("${web3j.chain-id}") private long chainId;
-    @Autowired private Wallet wallet;
+    @Autowired private AccountService accountService;
     @Autowired private ObjectMapper objectMapper;
     private final Web3j web3j;
 
@@ -40,7 +45,8 @@ public class SmartContractUtils {
     }
 
     public Credentials credentials(String accountAddress) {
-        String privateKey = wallet.getKeystore().get(accountAddress);
+        Account account = accountService.getAccountByAddress(accountAddress);
+        String privateKey = account.getPrivateKey();
         return Credentials.create(privateKey);
     }
 
@@ -49,7 +55,7 @@ public class SmartContractUtils {
     }
 
     public TicketNFT ticketNFT() throws Exception {
-        return ticketNFT(wallet.getKeystore().keySet().iterator().next());
+        return ticketNFT(accountService.getAccounts().get(0).getAddress());
     }
 
     public TicketNFT ticketNFT(String accountAddress) throws Exception {
@@ -100,5 +106,21 @@ public class SmartContractUtils {
         EthGetCode ethGetCode = web3j.ethGetCode(contractAddress, DefaultBlockParameterName.LATEST).send();
         String code = ethGetCode.getCode();
         return code != null && !code.equals("0x");
+    }
+
+    public Account createAccount(String name) {
+        Account account = null;
+        try {
+            String password = "secr3t";
+            ECKeyPair keyPair = Keys.createEcKeyPair();
+            WalletFile wallet = Wallet.createStandard(password, keyPair);
+
+            String privateKey = keyPair.getPrivateKey().toString(16);
+            log.info("Priate key: {}", privateKey);
+            account = accountService.createAccount(name, wallet.getAddress(), privateKey);
+        } catch (Exception e) {
+            log.error("Error: ", e);
+        }
+        return account;
     }
 }
