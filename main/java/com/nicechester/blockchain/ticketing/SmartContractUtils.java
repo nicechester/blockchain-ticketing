@@ -26,7 +26,7 @@ import java.io.IOException;
 @Getter
 public class SmartContractUtils {
     @Value("${web3j.chain-id}") private long chainId;
-    @Autowired private Accounts accounts;
+    @Autowired private Wallet wallet;
     @Autowired private ObjectMapper objectMapper;
     private final Web3j web3j;
 
@@ -40,7 +40,7 @@ public class SmartContractUtils {
     }
 
     public Credentials credentials(String accountAddress) {
-        String privateKey = accounts.getKeystore().get(accountAddress);
+        String privateKey = wallet.getKeystore().get(accountAddress);
         return Credentials.create(privateKey);
     }
 
@@ -49,7 +49,7 @@ public class SmartContractUtils {
     }
 
     public TicketNFT ticketNFT() throws Exception {
-        return ticketNFT(accounts.getKeystore().keySet().iterator().next());
+        return ticketNFT(wallet.getKeystore().keySet().iterator().next());
     }
 
     public TicketNFT ticketNFT(String accountAddress) throws Exception {
@@ -96,7 +96,8 @@ public class SmartContractUtils {
     }
 
     private boolean isContractDeployed(String address) throws Exception {
-        EthGetCode ethGetCode = web3j.ethGetCode("0x" + address, DefaultBlockParameterName.LATEST).send();
+        String contractAddress = address.startsWith("0x") ? address : "0x" + address;
+        EthGetCode ethGetCode = web3j.ethGetCode(contractAddress, DefaultBlockParameterName.LATEST).send();
         String code = ethGetCode.getCode();
         return code != null && !code.equals("0x");
     }

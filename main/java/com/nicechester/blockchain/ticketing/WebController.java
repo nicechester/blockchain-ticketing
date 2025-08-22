@@ -12,32 +12,56 @@ import java.time.LocalDate;
 public class WebController {
     private final TicketService ticketService;
     private final SmartContractUtils smartContractUtils;
+    private final AccountService accountService;
 
     @GetMapping("/accounts")
     public String accounts(Model model) {
-        var keystore = smartContractUtils.getAccounts().getKeystore();
-        model.addAttribute("accounts", keystore.keySet());
+        model.addAttribute("accounts", accountService.getAccounts());
         return "accounts";
     }
 
     @GetMapping({"/", "/menu"})
-    public String menu() {
+    public String menu(Model model) {
+        model.addAttribute("accounts", accountService.getAccounts());
         return "menu";
     }
 
     @GetMapping("/mint")
-    public String mintForm() {
+    public String mintForm(@RequestParam(required = false) String to, Model model) {
+        model.addAttribute("to", to);
+        if (to != null && !to.isBlank()) {
+            try {
+                var tickets = ticketService.getTicketsOf(to);
+                model.addAttribute("tickets", tickets);
+                model.addAttribute("toAccount", accountService.getAccountByAddress(to));
+            } catch (Exception e) {
+                model.addAttribute("tickets", null);
+                model.addAttribute("message", "Error loading tickets: " + e.getMessage());
+            }
+        }
+        model.addAttribute("accounts", accountService.getAccounts());
         return "mint";
     }
 
     @PostMapping("/mint")
-    public String mintSubmit(@RequestParam String to, @RequestParam LocalDate visitDate, @RequestParam String park, Model model) {
-        // TODO: Call service to mint ticket
+    public String mintSubmit(@RequestParam String to, @RequestParam LocalDate visitDate, @RequestParam String park, @RequestParam String sku, Model model) {
         try {
-            java.math.BigInteger tokenId = ticketService.mint(to, visitDate, park);
+            java.math.BigInteger tokenId = ticketService.mint(to, visitDate, park, sku);
             model.addAttribute("message", "Ticket minted! Token ID: " + tokenId);
+            model.addAttribute("to", to);
         } catch (Exception e) {
             model.addAttribute("message", "Error: " + e.getMessage());
+            model.addAttribute("to", to);
+        }
+        // Always show tickets for this account after mint
+        if (to != null && !to.isBlank()) {
+            try {
+                var tickets = ticketService.getTicketsOf(to);
+                model.addAttribute("tickets", tickets);
+            } catch (Exception e) {
+                model.addAttribute("tickets", null);
+                model.addAttribute("message", "Error loading tickets: " + e.getMessage());
+            }
         }
         return "mint";
     }
@@ -67,14 +91,16 @@ public class WebController {
     }
 
     @PostMapping("/use")
-    public String useSubmit(@RequestParam String tokenId, Model model) {
-        // TODO: Call service to use ticket
+    public String useSubmit(@RequestParam String tokenId, @RequestParam(required = false) String to, Model model) {
         try {
             ticketService.useTicket(new java.math.BigInteger(tokenId));
             model.addAttribute("message", "Ticket used!");
+            model.addAttribute("to", to);
         } catch (Exception e) {
             model.addAttribute("message", "Error: " + e.getMessage());
+            model.addAttribute("to", to);
         }
+        model.addAttribute("owner", to);
         return "use";
     }
 
@@ -84,14 +110,16 @@ public class WebController {
     }
 
     @PostMapping("/cancel")
-    public String cancelSubmit(@RequestParam String tokenId, Model model) {
-        // TODO: Call service to cancel ticket
+    public String cancelSubmit(@RequestParam String tokenId, @RequestParam(required = false) String to, Model model) {
         try {
             ticketService.cancelTicket(new java.math.BigInteger(tokenId));
             model.addAttribute("message", "Ticket canceled!");
+            model.addAttribute("to", to);
         } catch (Exception e) {
             model.addAttribute("message", "Error: " + e.getMessage());
+            model.addAttribute("to", to);
         }
+        model.addAttribute("owner", to);
         return "cancel";
     }
 
@@ -131,7 +159,11 @@ public class WebController {
     }
 
     @GetMapping("/transfer")
-    public String transferForm() {
+    public String transferForm(@RequestParam String tokenId, @RequestParam String from, Model model) {
+        model.addAttribute("accounts", accountService.getAccounts());
+        model.addAttribute("from", from);
+        model.addAttribute("fromAccount", accountService.getAccountByAddress(from));
+        model.addAttribute("tokenId", tokenId);
         return "transfer";
     }
 
@@ -139,11 +171,17 @@ public class WebController {
     public String transferSubmit(@RequestParam String from, @RequestParam String to, @RequestParam String tokenId, Model model) {
         try {
             ticketService.transferTicket(from, to, new java.math.BigInteger(tokenId));
-            model.addAttribute("message", "Ticket transferred!");
+            model.addAttribute("from", from);
+            model.addAttribute("to", to);
+            model.addAttribute("tokenId", tokenId);
+            return "transfered";
         } catch (Exception e) {
             model.addAttribute("message", "Error: " + e.getMessage());
+            model.addAttribute("from", from);
+            model.addAttribute("tokenId", tokenId);
+            // Optionally, you can add 'to' as well if needed
+            return "transfer";
         }
-        return "transfer";
     }
 
 

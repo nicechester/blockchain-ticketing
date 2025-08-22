@@ -7,30 +7,43 @@
 <body class="bg-light">
     <div class="container py-5">
         <h1 class="mb-4 text-primary">My Tickets</h1>
-        <form method="get" action="/tickets" class="mb-4 row g-3 align-items-center">
-            <div class="col-auto">
-                <label class="col-form-label">Account Address:</label>
-            </div>
-            <div class="col-auto">
-                <input type="text" class="form-control" name="owner" required/>
-            </div>
-            <div class="col-auto">
-                <button type="submit" class="btn btn-primary">View Tickets</button>
-            </div>
-        </form>
         <div th:if="${owner != null}">
-            <h2>Account: <span th:text="${owner}"></span></h2>
+            <h2>Account:
+                <span th:text="${@accountService.getAccountByAddress(owner)?.name}"></span>
+                <span class="text-muted small ms-2" th:text="${owner}"></span>
+            </h2>
+            <a class="btn btn-primary mb-3" th:href="@{'/mint'(to=${owner})}">Mint Ticket</a>
         </div>
         <div th:if="${tickets != null}">
             <h2>Tickets</h2>
-            <ul class="list-group">
-                <li class="list-group-item" th:each="ticket : ${tickets}">
-                    <strong>Token ID:</strong> <span th:text="${ticket.tokenId}"></span>,
-                    <strong>Status:</strong> <span th:text="${ticket.status}"></span>,
-                    <strong>Visit Date:</strong> <span th:text="${ticket.visitDate}"></span>,
-                    <strong>Park:</strong> <span th:text="${ticket.park}"></span>
+            <ul class="list-group" th:if="${tickets.size() > 0}">
+                <li class="list-group-item" th:each="ticket : ${tickets}"
+                    th:classappend="${ticket.status} == 'Valid' ? 'bg-success-subtle' :
+                                    (${ticket.status} == 'Used' ? 'bg-secondary-subtle' :
+                                    (${ticket.status} == 'Canceled' ? 'bg-danger-subtle' : ''))">
+                    <div>
+                        <strong>Token ID:</strong> <span th:text="${ticket.tokenId}"></span>,
+                        <strong>Status:</strong> <span th:text="${ticket.status}"></span>,
+                        <strong>Visit Date:</strong> <span th:text="${ticket.visitDate}"></span>,
+                        <strong>Park:</strong> <span th:text="${ticket.park}"></span>,
+                        <strong>SKU:</strong> <span th:text="${ticket.sku}"></span>
+                    </div>
+                    <div class="mt-2">
+                        <form th:action="@{'/use'}" method="post" style="display:inline">
+                            <input type="hidden" name="tokenId" th:value="${ticket.tokenId}"/>
+                            <button type="submit" class="btn btn-sm btn-outline-primary">Use Ticket</button>
+                        </form>
+                        <form th:action="@{'/cancel'}" method="post" style="display:inline">
+                            <input type="hidden" name="tokenId" th:value="${ticket.tokenId}"/>
+                            <button type="submit" class="btn btn-sm btn-outline-danger ms-1">Void Ticket</button>
+                        </form>
+                        <a class="btn btn-sm btn-outline-secondary ms-1" th:href="@{'/transfer'(tokenId=${ticket.tokenId},from=${owner})}">Transfer Ticket</a>
+                    </div>
                 </li>
             </ul>
+            <div th:if="${tickets.size() == 0}" class="alert alert-warning mt-3">
+                No ticket's found for this account.
+            </div>
         </div>
         <a class="btn btn-secondary mt-4" href="/menu">Back to Menu</a>
     </div>

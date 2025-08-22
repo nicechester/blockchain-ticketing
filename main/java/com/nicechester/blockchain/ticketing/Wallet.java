@@ -9,6 +9,6 @@ import java.util.Map;
 @Data
 @Configuration
 @ConfigurationProperties(prefix = "wallet")
-public class Accounts {
+public class Wallet {
     private Map<String, String> keystore;
 }

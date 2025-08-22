@@ -25,9 +25,9 @@ public class TicketController {
     private final TicketService ticketService;
 
     @PostMapping("mint")
-    public ResponseEntity<String> mintTicket(@RequestParam String to, @RequestParam LocalDate visitDate, @RequestParam String park) {
+    public ResponseEntity<String> mintTicket(@RequestParam String to, @RequestParam LocalDate visitDate, @RequestParam String park, @RequestParam String sku) {
         try {
-            BigInteger tokenId = ticketService.mint(to, visitDate, park);
+            BigInteger tokenId = ticketService.mint(to, visitDate, park, sku);
             return ResponseEntity.ok(String.format("Ticket minted for: %s (tokenId=%d)", to, tokenId));
         } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error: " + e.getMessage());

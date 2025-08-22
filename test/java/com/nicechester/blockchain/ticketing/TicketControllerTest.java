@@ -31,10 +31,11 @@ class TicketControllerTest {
         String to = "0xabc";
         LocalDate visitDate = LocalDate.now();
         String park = "MagicPark";
+        String sku = "SKU123";
 
-        when(ticketService.mint(eq(to), eq(visitDate), eq(park))).thenReturn(BigInteger.ONE);
+        when(ticketService.mint(eq(to), eq(visitDate), eq(park), eq(sku))).thenReturn(BigInteger.ONE);
 
-        ResponseEntity<String> response = ticketController.mintTicket(to, visitDate, park);
+        ResponseEntity<String> response = ticketController.mintTicket(to, visitDate, park, sku);
 
         assertEquals(200, response.getStatusCodeValue());
         assertEquals("Ticket minted for: 0xabc (tokenId=1)", response.getBody());
@@ -53,7 +54,8 @@ class TicketControllerTest {
     @Test
     void testGetTicketInfo() throws Exception {
         BigInteger tokenId = BigInteger.ONE;
-        TicketService.TicketInfo ticketInfo = new TicketService.TicketInfo(tokenId, "Park", LocalDate.now(), TicketService.TicketStatus.Valid);
+        String sku = "SKU123";
+        TicketService.TicketInfo ticketInfo = new TicketService.TicketInfo(tokenId, "Park", LocalDate.now(), sku, TicketService.TicketStatus.Valid);
 
         when(ticketService.getTicketInfo(tokenId)).thenReturn(ticketInfo);
 
@@ -65,7 +67,8 @@ class TicketControllerTest {
     @Test
     void testGetTicketsOf() throws Exception {
         String account = "0xabc";
-        TicketService.TicketInfo ticketInfo = new TicketService.TicketInfo(BigInteger.ONE, "Park", LocalDate.now(), TicketService.TicketStatus.Valid);
+        String sku = "SKU123";
+        TicketService.TicketInfo ticketInfo = new TicketService.TicketInfo(BigInteger.ONE, "Park", LocalDate.now(), sku, TicketService.TicketStatus.Valid);
 
         when(ticketService.getTicketsOf(account)).thenReturn(List.of(ticketInfo));
 
