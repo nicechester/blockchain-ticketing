@@ -1,28 +1,11 @@
 package com.nicechester.blockchain.ticketing;
 
+import lombok.Value;
+
+@Value
 public class Account {
-    private String address;
-    private String name;
-
-    public Account(String address, String name) {
-        this.address = address;
-        this.name = name;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
+    private final String address;
+    private final String privateKey;
+    private final String name;
 }
 

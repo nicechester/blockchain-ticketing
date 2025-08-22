@@ -7,3 +7,4 @@ node_modules
 .java-version
 package-lock.json
 contract-address.json
+accounts.json
